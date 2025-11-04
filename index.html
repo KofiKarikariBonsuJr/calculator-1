@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <body>
+         <input type="number" id="a" placeholder="Enter first number">
+         <input type="number" id="b" placeholder="Enter second number">
+         <button id="add">Add</button>
+
+    <h2>Result: <span id="result"></span></h2>
         <script>
          document.getElementById("add").addEventListener("click", async () => {
             const a = parseFloat(document.getElementById("a").value);

@@ -33,7 +33,8 @@ def test_calculator_ui():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto("https://kofikarikaribonsujr.github.io/calchost")
+        page.goto("http://localhost:8000")
+       #page.goto("https://kofikarikaribonsujr.github.io/calchost
 
         page.fill("#a", "2")
         page.fill("#b", "3")
