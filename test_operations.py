@@ -5,6 +5,8 @@ from httpx import AsyncClient, ASGITransport
 from main import app
 from playwright.sync_api import sync_playwright
 import pytest
+import subprocess
+import time
 
 def test_add():
     assert addition(2, 3) == 5
@@ -22,6 +24,12 @@ async def test_add_endpoint():
  assert response.json() == {"result": 8}
 
 def test_calculator_ui():
+    
+    
+    
+    server = subprocess.Popen(["uvicorn", "main:app", "--port", "8000"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    time.sleep(2)
+    
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()

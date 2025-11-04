@@ -1,0 +1,15 @@
+    <script>
+        document.getElementById("add").addEventListener("click", async () => {
+            const a = parseFloat(document.getElementById("a").value);
+            const b = parseFloat(document.getElementById("b").value);
+
+            const response = await fetch("/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ a, b })
+            });
+
+            const data = await response.json();
+            document.getElementById("result").innerText = data.result;
+        });
+    </script>
