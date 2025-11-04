@@ -3,6 +3,7 @@ from Calculator.Subtraction import subtraction
 from Calculator.Division import division
 from httpx import AsyncClient, ASGITransport
 from main import app
+from playwright.sync_api import sync_playwright
 import pytest
 
 def test_add():
@@ -19,3 +20,17 @@ async def test_add_endpoint():
         response = await ac.get("/add?a=5&b=3")
  assert response.status_code == 200
  assert response.json() == {"result": 8}
+ 
+ def test_calculator_ui():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto("http://127.0.0.1:8000")
+
+        page.fill("#a", "2")
+        page.fill("#b", "3")
+        page.click("#add-btn")
+        
+        result = page.text_content("#result")
+        assert result == "5"
+        browser.close()
