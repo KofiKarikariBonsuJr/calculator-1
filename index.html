@@ -5,22 +5,25 @@
          <input type="number" id="b" placeholder="Enter second number">
          <button id="add-btn">Add</button>
          <p>Result: <span id="result"></span></p>
-
-    <h2>Result: <span id="result"></span></h2>
+>
         <script>
-         document.getElementById("add").addEventListener("click", async () => {
-            const a = parseFloat(document.getElementById("a").value);
-            const b = parseFloat(document.getElementById("b").value);
+            async function calculate(operation) {
+              const a = parseFloat(document.getElementById("a").value);
+              const b = parseFloat(document.getElementById("b").value);
 
-            const response = await fetch("/add", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ a, b })
-            });
+              const response = await fetch(`/${operation}`, {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ a, b })
+             });
 
-            const data = await response.json();
-            document.getElementById("result").innerText = data.result;
-         });
+             const data = await response.json();
+                 document.getElementById("result").textContent = data.result ?? data.error ?? "Error";
+               }
+
+    document.getElementById("add-btn").onclick = () => calculate("add");
+    document.getElementById("sub-btn").onclick = () => calculate("subtract");
+    document.getElementById("div-btn").onclick = () => calculate("divide");
      </script>
      </body>
  </html>

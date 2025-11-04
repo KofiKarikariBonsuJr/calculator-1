@@ -3,6 +3,8 @@ from Calculator.Addition import addition
 from Calculator.Subtraction import subtraction
 from Calculator.Division import division
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+
 
 app = FastAPI()
 
@@ -11,14 +13,18 @@ def home():
     with open("index.html") as f:
         return f.read()
 
-@app.get("/add")
-def add(a: float, b: float):
-    return {"result": addition(a, b)}
+class Numbers(BaseModel):
+    a: float
+    b: float
 
-@app.get("/subtract")
-def subtract(a: float, b: float):
-    return {"result": subtraction(a, b)}
+@app.post("/add")
+def add(nums: Numbers):
+    return {"result": nums.a + nums.b}
 
-@app.get("/divide")
-def divide(a: float, b: float):
-    return {"result": division(a, b)}
+@app.post("/subtract")
+def subtract(nums: Numbers):
+    return {"result": nums.a - nums.b}
+
+@app.post("/divide")
+def divide(nums: Numbers):
+    return {"result": nums.a / nums.b}
