@@ -24,6 +24,8 @@
     document.getElementById("add-btn").onclick = () => calculate("add");
     document.getElementById("sub-btn").onclick = () => calculate("subtract");
     document.getElementById("div-btn").onclick = () => calculate("divide");
+   const data = await response.json();
+   document.getElementById("result").innerText = data.result;
      </script>
      </body>
  </html>
