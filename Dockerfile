@@ -1,7 +1,9 @@
 FROM python:3.7
 
-ADD . .
+WORKDIR /app
+
+COPY . /app
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "-m", "unittest", "discover", "-s","Tests"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

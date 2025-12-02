@@ -1,23 +1,45 @@
-version: '3'
+version: '3.9'
+
 services:
   web:
     build: .
+    container_name: calculator_web
     ports:
       - "5000:5000"
+    depends_on:
+      - db
+
   db:
-    #   Use the Docker Image postgres. This will pull the newest release.
-    image: "postgres"
-    #   Give the container the name my_postgres. You can changes to something else.
-    container_name: "my_postgres"
-    #   Setup the username, password, and database name. You can changes these values.
+    image: postgres:15
+    container_name: my_postgres
     environment:
-      - POSTGRES_USER=john
-      - POSTGRES_PASSWORD=pwd0123456789
-      - POSTGRES_DB=mydb
-    #   Maps port 54320 (localhost) to port 5432 on the container. You can change the ports to fix your needs.
+      POSTGRES_USER: john
+      POSTGRES_PASSWORD: pwd0123456789
+      POSTGRES_DB: mydbs
     ports:
       - "54320:5432"
-    #   Set a volume some that database is not lost after shutting down the container.
-    #   I used the name postgres-data but you can changed it to something else.
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: my_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: kofibonsu5@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: pwd0123456789
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  fastapi:
+    build: .
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
