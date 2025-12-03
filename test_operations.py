@@ -24,9 +24,7 @@ async def test_add_endpoint():
  assert response.json() == {"result": 8}
 
 def test_calculator_ui():
-    
-    
-    
+       
     server = subprocess.Popen(["uvicorn", "main:app", "--port", "8000"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     time.sleep(2)
     

@@ -1,4 +1,10 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.user import User
+from app.schemas.user import UserCreate, UserRead
+from app.security import hash_password
 from Calculator.Addition import addition
 from Calculator.Subtraction import subtraction
 from Calculator.Division import division
@@ -7,6 +13,7 @@ from pydantic import BaseModel
 import logging
 
 app = FastAPI()
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("calculator")
 
@@ -34,3 +41,4 @@ def divide(nums: Numbers):
        logger.info(f"Received add request: {nums.a} / {nums.b}")
        return {"result": nums.a / nums.b}
 
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

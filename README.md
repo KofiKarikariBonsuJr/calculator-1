@@ -1,5 +1,7 @@
-[![Build Status](https://travis-ci.com/kaw393939/calculator.svg?branch=master)](https://travis-ci.com/kaw393939/calculator)
+Run local tests:
+pip install -r requirements.txt
+pytest
 
-# calculator
-
-# Statistics
+Run locally with docker
+docker build -t fastapi-app .
+docker run -p 8000:8000 fastapi-app

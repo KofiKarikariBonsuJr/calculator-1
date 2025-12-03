@@ -5,3 +5,7 @@ pydantic
 httpx
 pytest
 pytest-asyncio
+email-validator
+sqlalchemy
+passlib[bcrypt]
+bcrypt

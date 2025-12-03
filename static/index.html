@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+         <input type="number" id="a" placeholder="Enter first number">
+         <input type="number" id="b" placeholder="Enter second number">
+         <button id="add-btn">Add</button>
+         <p>Result: <span id="result"></span></p>
+>
+        <script>
+            async function calculate(operation) {
+              const a = parseFloat(document.getElementById("a").value);
+              const b = parseFloat(document.getElementById("b").value);
+
+              const response = await fetch(`/${operation}`, {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ a, b })
+             });
+
+                  const data = await response.json();
+                 document.getElementById("result").textContent = data.result;
+               }
+
+    document.getElementById("add-btn").onclick = () => calculate("add");
+    document.getElementById("sub-btn").onclick = () => calculate("subtract");
+    document.getElementById("div-btn").onclick = () => calculate("divide");
+   const data = await response.json();
+   document.getElementById("result").innerText = data.result;
+     </script>
+     </body>
+ </html>
