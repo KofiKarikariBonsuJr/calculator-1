@@ -9,3 +9,4 @@ email-validator
 sqlalchemy
 passlib[bcrypt]
 bcrypt
+jwt

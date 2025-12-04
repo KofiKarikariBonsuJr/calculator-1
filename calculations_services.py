@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.calculations import Calculation
-from app.schemas.calculations import CalculationCreate
+from app.schemas.Scalculations import CalculationCreate
 
 def create_calculation(db: Session, payload: CalculationCreate, user_id: int | None = None) -> Calculation:
 

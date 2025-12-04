@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from app.schemas.user import UserCreate
+from app.schemas.Suser import UserCreate
 
 def test_email_validation():
     try:
