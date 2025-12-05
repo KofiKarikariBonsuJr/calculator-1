@@ -49,6 +49,8 @@ def login(user: UserRead, db: Session = Depends(get_db)):
         raise HTTPException(400, "Invalid credentials")
     return {"access_token": "FAKE_TOKEN"}
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 @app.get("/")
-def read_index():
-    return FileResponse("index.html")
+def root():
+    return FileResponse("static/index.html")
