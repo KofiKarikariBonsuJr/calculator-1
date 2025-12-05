@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.Mcalculations import Calculation
@@ -49,35 +49,6 @@ def login(user: UserRead, db: Session = Depends(get_db)):
         raise HTTPException(400, "Invalid credentials")
     return {"access_token": "FAKE_TOKEN"}
 
-@app.get("/", response_class=HTMLResponse)
-def serve_ui():
-    return """
-    <html>
-        <body>
-            <input id="a" type="number">
-            <input id="b" type="number">
-            <select id="operation">
-                <option value="add">Add</option>
-                <option value="subtract">Subtract</option>
-                <option value="multiply">Multiply</option>
-                <option value="divide">Divide</option>
-            </select>
-            <button id="calculate">Calculate</button>
-            <div id="result"></div>
-            <script>
-                document.getElementById('calculate').onclick = async () => {
-                    const a = Number(document.getElementById('a').value);
-                    const b = Number(document.getElementById('b').value);
-                    const op = document.getElementById('operation').value;
-                    const r = await fetch('/' + op, {
-                        method: 'POST',
-                        headers: {'Content-Type':'application/json'},
-                        body: JSON.stringify({a, b})
-                    });
-                    const data = await r.json();
-                    document.getElementById('result').innerText = data.result;
-                };
-            </script>
-        </body>
-    </html>
-    """
+@app.get("/")
+def read_index():
+    return FileResponse("index.html")

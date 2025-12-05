@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <body>
-    <input type="number" id="a" placeholder="Enter first number">
-    <input type="number" id="b" placeholder="Enter second number">
+        <body>
+            <input id="a" type="number">
+            <input id="b" type="number">
+            <select id="operation">
+                <option value="add-btn">Add</option>
+                <option value="subtract-btn">Subtract</option>
+                <option value="multiply-btn">Multiply</option>
+                <option value="divide-btn">Divide</option>
+            </select>
+            <button id="calculate">Calculate</button>
+            <div id="result"></div>
+            <script>
+                document.getElementById('calculate').onclick = async () => {
+                    const a = Number(document.getElementById('a').value);
+                    const b = Number(document.getElementById('b').value);
+                    const op = document.getElementById('operation').value;
+                    const r = await fetch('/' + op, {
+                        method: 'POST',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({a, b})
+                    });
+                    const data = await r.json();
+                    document.getElementById('result').innerText = data.result;
+                };
+            </script>
+        </body>
+    </html>
 
-    <button id="add-btn">Add</button>
-
-    <p>Result: <span id="result"></span></p>
-
-    <script>
-      async function calculate(operation) {
-        const a = parseFloat(document.getElementById("a").value);
-        const b = parseFloat(document.getElementById("b").value);
-
-        const response = await fetch(`/${operation}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ a, b })
-        });
-
-        const data = await response.json();
-        document.getElementById("result").textContent = data.result;
-      }
-
-      document.getElementById("add-btn").onclick = () => calculate("add");
-    </script>
-  </body>
-</html>
