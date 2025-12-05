@@ -37,15 +37,15 @@ def test_calculator_ui():
         page = browser.new_page()
         page.goto("http://localhost:8000")
 
-        page.fill("a", "2")
-        page.fill("b", "3")
+        page.fill("#a", "2")
+        page.fill("#b", "3")
 
-        page.select_option("operation", "add")
+        page.select_option("#operation", "add")
 
-        page.click("calculate")
+        page.click("#calculate")
 
-        page.wait_for_selector("result")
-        text = page.inner_text("result")
+        page.wait_for_selector("#result")
+        text = page.inner_text("#result")
 
         assert "5" in text
         browser.close()
