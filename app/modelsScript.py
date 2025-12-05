@@ -27,7 +27,7 @@ class Calculation(Base):
     type = Column(Enum(CalcType), nullable=False)
     # optional: store result
     result = Column(Float, nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+   
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="calculations")

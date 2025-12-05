@@ -3,9 +3,9 @@ from pydantic import BaseModel, Field, field_validator, model_validator, validat
 from typing import Optional
 from pytest import Session
 from app import CRUD, database
-from app.models import calculations
+from app.models import Mcalculations
 from app.models.Mcalculations import Calculation, CalculationType
-from app.schemas import schemas
+from app import schemasScript
 from sqlalchemy.orm import Session
 from .. import CRUD, database, modelsScript
 
@@ -22,7 +22,7 @@ class CalculationCreate(BaseModel):
             raise ValueError("Cannot divide by zero")
         return self
     
-@router.post("", response_model=schemas.CalculationRead)
+@router.post("", response_model=schemasScript.CalculationRead)
 def create_calc(calc: CalculationCreate, db: Session = Depends(database.get_db)):
     result = (
         calc.a + calc.b if calc.type == "add"
