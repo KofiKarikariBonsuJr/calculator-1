@@ -26,21 +26,26 @@ async def test_add_endpoint():
     assert response.status_code == 200
 
 def test_calculator_ui():
-       
-    server = subprocess.Popen(["uvicorn", "main:app", "--port", "8000"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    server = subprocess.Popen(
+        ["uvicorn", "main:app", "--port", "8000"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     time.sleep(2)
-    
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto("http://localhost:8000")
-       #page.goto("https://kofikarikaribonsujr.github.io/calchost
 
-        page.fill("#a", "2")
-        page.fill("#b", "3")
-        page.click("#add-btn")
-        
-        page.wait_for_selector("#result")
-        result = page.text_content("#result")
-        assert result == "5"
+        page.fill("a", "2")
+        page.fill("b", "3")
+
+        page.select_option("operation", "add")
+
+        page.click("calculate")
+
+        page.wait_for_selector("result")
+        text = page.inner_text("result")
+
+        assert "5" in text
         browser.close()
