@@ -10,3 +10,5 @@ sqlalchemy
 passlib[bcrypt]
 bcrypt
 jwt
+python-jose
+

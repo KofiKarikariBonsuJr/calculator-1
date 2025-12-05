@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Register</title>
+</head>
+<body>
+  <h1>Register</h1>
+
+  <form id="register-form" action="/users/register" method="POST">
+    <label>Username: <input id="username" /></label><br/>
+    <label>Email: <input id="email" type="email" /></label><br/>
+    <label>Password: <input id="password" type="password" /></label><br/>
+    <label>Confirm: <input id="confirm" type="password" /></label><br/>
+    <button id="register-btn" type="submit">Register</button>
+  </form>
+
+  <div id="msg"></div>
+
+  <script>
+    const form = document.getElementById("register-form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+
+
+      if (password.length < 6) {
+        msg.textContent = "Password too short";
+        return;
+      }
+
+      if (password !== confirm) {
+        msg.textContent = "Passwords do not match";
+        return;
+      }
+
+
+      const res = await fetch("/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.access_token) {
+          localStorage.setItem("token", data.access_token);
+        }
+        msg.textContent = "Registered";
+      } else {
+        const err = await res.json().catch(() => ({ detail: "Registration failed" }));
+        msg.textContent = err.detail || "Registration failed";
+      }
+    });
+  </script>
+</body>
+</html>

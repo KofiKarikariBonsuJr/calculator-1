@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from enum import Enum
 
 class CalcType(str, Enum):
@@ -29,7 +29,7 @@ class CalculationRead(BaseModel):
 
 class UserCreate(BaseModel):
     username: str
-    email: str
+    email: EmailStr
     password: str
 
 class UserRead(BaseModel):

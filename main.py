@@ -3,13 +3,21 @@ from pathlib import Path
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+import status
 from app.database import get_db
 from app.models.Mcalculations import Calculation
 from app.models.Muser import User
+from app.schemas.auth import LoginIn, RegisterIn, TokenOut
 from app.schemasScript import (
     CalculationCreate, CalculationRead, 
     UserCreate, UserRead
 )
+from passlib.context import CryptContext
+
+from app.security import create_access_token, hash_password, verify_password
+
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
+
 
 app = FastAPI()
 
@@ -33,26 +41,39 @@ def get_calculation(calc_id: int, db: Session = Depends(get_db)):
         raise HTTPException(404)
     return obj
 
-@app.post("/users/register")
-def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    if db.query(User).filter(User.email == user.email).first():
-        raise HTTPException(400, "Email already exists")
+@app.post("/users/register", response_model=TokenOut)
+def register(user_in: RegisterIn, db: Session = Depends(get_db)):
 
-    u = User(username=user.username, email=user.email, password_hash=user.password)
+    if db.query(User).filter((User.email == user_in.email) | (User.username == user_in.username)).first():
+        raise HTTPException(status_code=400, detail="username or email already exists")
+
+    u = User(username=user_in.username, email=user_in.email, password_hash=hash_password(user_in.password))
     db.add(u)
     db.commit()
     db.refresh(u)
-    return {"id": u.id}
 
-@app.post("/users/login")
-def login(user: UserRead, db: Session = Depends(get_db)):
-    u = db.query(User).filter(User.username == user.username).first()
-    if not u or u.password_hash != user.password:
-        raise HTTPException(400, "Invalid credentials")
-    return {"access_token": "FAKE_TOKEN"}
+    token = create_access_token({"sub": user_in.email})
+    return {"access_token": token, "token_type": "bearer"}
+
+
+@app.post("/users/login", response_model=TokenOut)
+def login(login_in: LoginIn, db: Session = Depends(get_db)):
+    u = db.query(User).filter(User.username == login_in.username).first()
+    if not u or not verify_password(login_in.password, u.password_hash):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    token = create_access_token(subject=str(u.id))
+    return {"access_token": token, "token_type": "bearer"}
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def root():
     return Path("static/index.html").read_text()
+
+@app.get("/register", response_class=HTMLResponse)
+def register_page():
+    return FileResponse("static/register.html")
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page():
+    return FileResponse("static/login.html")
