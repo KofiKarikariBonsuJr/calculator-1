@@ -11,4 +11,4 @@ passlib[bcrypt]
 bcrypt
 jwt
 python-jose
-
+status
