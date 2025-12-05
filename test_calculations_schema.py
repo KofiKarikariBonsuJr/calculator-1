@@ -8,7 +8,7 @@ def test_create_and_read_calc(db_session, client):
 
     calc_id = data["id"]
 
-    # Fetch same calculation
+
     r2 = client.get(f"/calculations/{calc_id}")
     assert r2.status_code == 200
     assert r2.json()["result"] == 8

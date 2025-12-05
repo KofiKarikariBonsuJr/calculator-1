@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from pathlib import Path
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -52,6 +53,6 @@ def login(user: UserRead, db: Session = Depends(get_db)):
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def root():
-    return FileResponse("static/index.html")
+    return Path("static/index.html").read_text()
